@@ -7,6 +7,7 @@ interface ProgressHeaderProps {
 
 export function ProgressHeader({ currentStage }: ProgressHeaderProps) {
   const stepIndex = STAGES.findIndex((s) => s.stage === currentStage)
+  const progress = stepIndex >= 0 ? ((stepIndex + 1) / STAGES.length) * 100 : 0
 
   return (
     <div className="sticky top-0 z-50 bg-onyx/80 backdrop-blur-md border-b border-white/5">
@@ -19,15 +20,12 @@ export function ProgressHeader({ currentStage }: ProgressHeaderProps) {
             </span>
           )}
         </div>
-        <div className="flex gap-1.5">
-          {STAGES.map((s, i) => (
-            <div
-              key={s.stage}
-              className={`h-1 flex-1 rounded-full transition-all duration-500 ${
-                i <= stepIndex ? 'gradient-sapphire-amethyst' : 'bg-white/10'
-              }`}
-            />
-          ))}
+        {/* Barre unique : le gradient bleu se propage du début à la fin de la progression */}
+        <div className="h-1 w-full rounded-full bg-white/10 overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #1525FF 0%, #38BDF8 100%)' }}
+          />
         </div>
       </div>
     </div>

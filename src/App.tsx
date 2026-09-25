@@ -104,6 +104,7 @@ export default function App() {
           startingPoints={startingPoints}
           anchorHabits={anchorHabits}
           pacte={pacte}
+          prenom={prenom}
           onRestart={handleRestart}
         />
       )}

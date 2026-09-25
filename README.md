@@ -10,6 +10,7 @@ un point de départ de vie, choisir 3 dimensions prioritaires et générer une
 - Tailwind CSS (thème custom : onyx, sapphire `#1525FF`, amethyst `#6D3EAD`, garnet `#E92B1F`)
 - html-to-image (export PNG de la carte)
 - lucide-react (icônes)
+- Polices : Inter (texte) + Manrope (titres), style Apple
 - Aucune base de données : les réponses du questionnaire restent sur l'appareil
 
 ## Le parcours
@@ -55,4 +56,5 @@ Le code complet du script est dans [`apps-script/Code.gs`](apps-script/Code.gs) 
 plus fréquente est le déploiement : après chaque modification du code, il faut
 Déployer → Gérer les déploiements → crayon → **Nouvelle version** → Déployer.
 Consulte l'en-tête de `apps-script/Code.gs` pour la procédure d'installation et le
-ping de test `doGet`.
+ping de test `doGet`. La fonction `clearTestData()` (à exécuter une fois depuis
+l'éditeur Apps Script) purge les lignes de test de l'onglet « Soumissions ».

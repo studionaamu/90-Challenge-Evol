@@ -10,8 +10,9 @@ export default {
           light: '#3D4DFF',
         },
         amethyst: {
-          DEFAULT: '#6D3EAD',
-          light: '#8B5BC7',
+          /* Ancien violet, remappé sur la gamme bleue */
+          DEFAULT: '#1D4ED8',
+          light: '#38BDF8',
         },
         garnet: {
           DEFAULT: '#E92B1F',
@@ -19,8 +20,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         fadeIn: {

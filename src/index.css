@@ -4,13 +4,15 @@
 
 @layer utilities {
   .gradient-onyx-sapphire {
-    background: linear-gradient(180deg, #000000, #0a0a2e);
+    /* Dégradé dominante noire (homogène avec la carte logo fond noir), pointe bleue très profonde */
+    background: linear-gradient(180deg, #000000 0%, #0b0b22 55%, #05051a 100%);
   }
   .gradient-sapphire-amethyst {
-    background: linear-gradient(135deg, #1525ff, #6d3ead);
+    /* Dégradé 100 % bleu : sapphire profond → cyan clair */
+    background: linear-gradient(135deg, #1525ff, #38bdf8);
   }
-  .gradient-garnet-amethyst {
-    background: linear-gradient(135deg, #e92b1f, #6d3ead);
+  .gradient-sky {
+    background: linear-gradient(135deg, #1d4ed8, #38bdf8);
   }
   .glow-sapphire {
     box-shadow: 0 0 30px rgba(21, 37, 255, 0.3);
@@ -20,6 +22,19 @@
   }
   .glow-emerald {
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+  }
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 3.2s linear infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }
 
@@ -37,7 +52,7 @@ input[type='range']::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #1525ff, #6d3ead);
+  background: linear-gradient(135deg, #1525ff, #38bdf8);
   border: 2px solid #fff;
   cursor: pointer;
   box-shadow: 0 0 12px rgba(21, 37, 255, 0.5);
@@ -47,7 +62,7 @@ input[type='range']::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #1525ff, #6d3ead);
+  background: linear-gradient(135deg, #1525ff, #38bdf8);
   border: 2px solid #fff;
   cursor: pointer;
   box-shadow: 0 0 12px rgba(21, 37, 255, 0.5);

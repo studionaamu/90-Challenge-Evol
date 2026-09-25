@@ -64,7 +64,41 @@ function doPost(e) {
 // Ping de test : ouvre l'URL /exec dans un navigateur — doit afficher
 // {"ok":true,"message":"EVOL webhook actif"}. Toute autre réponse signifie
 // que la version déployée ne contient pas ce code.
+//
+// Purge à distance : /exec?action=purge&key=EVOL-PURGE-2026-x7K9
+// supprime toutes les lignes de l'onglet Soumissions (en-têtes conservés).
 function doGet(e) {
+  const action = e && e.parameter ? e.parameter.action : '';
+  const key = e && e.parameter ? e.parameter.key : '';
+
+  if (action === 'purge') {
+    if (key !== 'EVOL-PURGE-2026-x7K9') {
+      return ContentService.createTextOutput(JSON.stringify({ ok: false, error: 'clé invalide' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    const deleted = purgeSubmissions();
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, purged: deleted }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   return ContentService.createTextOutput(JSON.stringify({ ok: true, message: 'EVOL webhook actif' }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Nettoyage : supprime toutes les lignes de l'onglet Soumissions
+ * (la ligne d'en-têtes est conservée). Appelé par doGet?action=purge
+ * ou exécutable une fois depuis l'éditeur (clearTestData → Exécuter).
+ */
+function purgeSubmissions() {
+  const ss = getTargetSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet || sheet.getLastRow() <= 1) return 0;
+  const toDelete = sheet.getLastRow() - 1;
+  sheet.deleteRows(2, toDelete);
+  return toDelete;
+}
+
+function clearTestData() {
+  console.log('Lignes supprimées :', purgeSubmissions());
 }

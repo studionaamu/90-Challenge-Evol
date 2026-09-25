@@ -1,5 +1,5 @@
 import {
-  Camera,
+  Gauge,
   Check,
   Users,
   Briefcase,
@@ -52,7 +52,7 @@ export function PhotoScreen({ scores, priorities, onScoresChange, onPrioritiesCh
     <div className="animate-fade-in max-w-3xl mx-auto px-4 py-8">
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl gradient-sapphire-amethyst mb-4">
-          <Camera className="w-7 h-7 text-white" />
+          <Gauge className="w-7 h-7 text-white" />
         </div>
         <h1 className="font-display text-3xl sm:text-4xl font-bold mb-3">Ta photo du moment</h1>
         <p className="text-white/60 text-lg max-w-xl mx-auto">
@@ -62,7 +62,7 @@ export function PhotoScreen({ scores, priorities, onScoresChange, onPrioritiesCh
         </p>
         <div className="flex items-center justify-center gap-6 mt-4 text-sm">
           <span className="text-white/40">
-            <span className="text-garnet font-bold">0</span> — insatisfaisant
+            <span className="text-sky font-bold">0</span> — insatisfaisant
           </span>
           <span className="text-white/40">
             <span className="text-sapphire-light font-bold">10</span> — pleinement aligné·e
@@ -129,7 +129,7 @@ export function PhotoScreen({ scores, priorities, onScoresChange, onPrioritiesCh
                 {isSelected && (
                   <span
                     className={`font-display text-3xl font-bold flex-shrink-0 transition-colors ${
-                      score <= 3 ? 'text-garnet' : score <= 7 ? 'text-amethyst-light' : 'text-sapphire-light'
+                      score < 5 ? 'text-garnet' : 'text-sapphire-light'
                     }`
                     }
                   >

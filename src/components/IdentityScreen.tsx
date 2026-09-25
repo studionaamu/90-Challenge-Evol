@@ -38,12 +38,12 @@ export function IdentityScreen({ onDone }: IdentityScreenProps) {
   return (
     <div className="animate-fade-in max-w-2xl mx-auto px-4 py-10">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl gradient-sapphire-amethyst mb-6 glow-sapphire">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl gradient-sapphire-amethyst mb-6 glow-sapphire animate-scale-in">
           <User className="w-10 h-10 text-white" />
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4 text-balance">Bienvenue dans EVOL</h1>
+        <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4 text-balance">Bienvenue dans EVOL, ton challenge de 90 jours !</h1>
         <p className="text-white/70 text-lg leading-relaxed text-balance">
-          Avant de commencer, laisse-nous quelques coordonnées pour ouvrir ton espace. Cela ne prend qu'une minute, puis
+          Avant de commencer, laisse-nous quelques coordonnées. Cela ne prend qu'une minute, puis
           tu enchaînes sur ton parcours tranquillement.
         </p>
       </div>
@@ -93,9 +93,8 @@ export function IdentityScreen({ onDone }: IdentityScreenProps) {
       <div className="flex items-start gap-3 bg-white/[0.03] border border-white/10 rounded-2xl p-4 mb-6">
         <ShieldCheck className="w-5 h-5 text-sapphire-light flex-shrink-0 mt-0.5" />
         <p className="text-white/60 text-sm leading-relaxed">
-          <span className="text-sapphire-light font-medium">Tes données sont protégées :</span> elles restent chez toi,
-          ne sont jamais partagées ni revendues, et seul·e·s les membres habilités de la team support EVOL peuvent y
-          accéder si tu leur en fais la demande, uniquement dans le cadre de ton accompagnement.
+          <span className="text-sapphire-light font-medium">Tes réponses restent confidentielles :</span> elles sont
+          chiffrées, jamais partagées ni revendues. Tu peux demander leur suppression à tout moment.
         </p>
       </div>
 
@@ -104,7 +103,9 @@ export function IdentityScreen({ onDone }: IdentityScreenProps) {
           onClick={handleSubmit}
           disabled={!valid || submitting}
           className={`inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 ${
-            valid ? 'bg-sapphire hover:bg-sapphire-light glow-sapphire' : 'bg-white/5 text-white/30 cursor-not-allowed'
+            valid && !submitting
+              ? 'bg-sapphire hover:bg-sapphire-light glow-sapphire'
+              : 'bg-white/5 text-white/30 cursor-not-allowed'
           }`}
         >
           Commencer mon parcours

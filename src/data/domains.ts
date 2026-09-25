@@ -168,7 +168,7 @@ export const STAGES = [
   { stage: 'depart', label: 'Point de départ' },
   { stage: 'habits', label: 'Habitudes' },
   { stage: 'pacte', label: 'Pacte' },
-  { stage: 'summary', label: 'Carte' },
+  { stage: 'summary', label: 'Réponses' },
 ] as const
 
 export type Stage = (typeof STAGES)[number]['stage'] | 'welcome' | 'identity'
@@ -191,4 +191,46 @@ export function defaultPhotoScores(): PhotoScores {
   const scores: PhotoScores = {}
   for (const d of DOMAINS) scores[d.id] = 5
   return scores
+}
+
+export interface InspirationalQuote {
+  text: string
+  author?: string
+}
+
+/** Citations par défaut : la sélection s'inspire des réponses individuelles (prénom, pacte, priorité). */
+const INSPIRATIONAL_QUOTES: InspirationalQuote[] = [
+  { text: 'deviens ce que tu es.', author: 'Nietzsche' },
+  {
+    text: "le meilleur moment pour planter un arbre était il y a vingt ans. Le deuxième meilleur moment, c'est maintenant.",
+    author: 'Proverbe chinois',
+  },
+  {
+    text: "ce n'est pas parce que les choses sont difficiles que nous n'osons pas, c'est parce que nous n'osons pas qu'elles sont difficiles.",
+    author: 'Sénèque',
+  },
+  { text: 'le succès, c\'est tomber sept fois et se relever huit.', author: 'Proverbe japonais' },
+  { text: 'un pas, une habitude, une décision à la fois — ton évolution commence exactement ici.', author: 'EVOL' },
+  { text: "tu ne peux pas empêcher les vagues de venir, mais tu peux apprendre à surfer.", author: 'Jon Kabat-Zinn' },
+  { text: 'ce que tu fais chaque jour compte plus que ce que tu fais de temps en temps.', author: 'Gandhi' },
+  { text: 'la discipline est le pont entre tes objectifs et tes accomplissements.', author: 'Jim Rohn' },
+]
+
+/**
+ * Choisit une citation de façon déterministe à partir des réponses de l'utilisateur
+ * (prénom, engagement du pacte, première priorité) : chaque profil a « sa » citation.
+ */
+export function getPersonalizedQuote(
+  prenom: string,
+  pacteEngagement: string,
+  priorityDomain?: string,
+): InspirationalQuote {
+  const seedSource = `${prenom.trim().toLowerCase()}|${pacteEngagement.trim().toLowerCase()}|${priorityDomain ?? ''}`
+  let hash = 0
+  for (let i = 0; i < seedSource.length; i++) {
+    hash = (hash * 31 + seedSource.charCodeAt(i)) >>> 0
+  }
+  const picked = INSPIRATIONAL_QUOTES[hash % INSPIRATIONAL_QUOTES.length]
+  const prenomClean = prenom.trim() ? prenom.trim().charAt(0).toUpperCase() + prenom.trim().slice(1) : 'Tu'
+  return { text: `${prenomClean}, ${picked.text}`, author: picked.author }
 }

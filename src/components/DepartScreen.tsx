@@ -98,7 +98,7 @@ export function DepartScreen({
             </label>
             <span
               className={`font-display text-2xl font-bold ${
-                score <= 3 ? 'text-garnet' : score <= 7 ? 'text-amethyst-light' : 'text-sapphire-light'
+                score < 5 ? 'text-garnet' : 'text-sapphire-light'
               }`}
             >
               {score}/10
@@ -137,7 +137,7 @@ export function DepartScreen({
 
         <div>
           <label className="flex items-center gap-2 text-white/80 font-medium mb-2">
-            <Flame className="w-4 h-4 text-garnet" />
+            <Flame className="w-4 h-4 text-sky" />
             Pourquoi est-ce important pour moi de faire évoluer ce domaine maintenant ?
           </label>
           <textarea
@@ -145,13 +145,13 @@ export function DepartScreen({
             onChange={(e) => update('importance', e.target.value)}
             placeholder="Pourquoi maintenant..."
             rows={3}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white placeholder:text-white/30 focus:border-garnet focus:outline-none focus:ring-1 focus:ring-garnet transition-colors resize-none"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white placeholder:text-white/30 focus:border-sapphire focus:outline-none focus:ring-1 focus:ring-sapphire transition-colors resize-none"
           />
         </div>
 
         <div>
           <label className="flex items-center gap-2 text-white/80 font-medium mb-2">
-            <Target className="w-4 h-4 text-amethyst-light" />
+            <Target className="w-4 h-4 text-sky" />
             Dans 90 jours, qu'aimerais-tu pouvoir dire, au présent ?
           </label>
           <p className="text-xs text-white/40 mb-2">
@@ -162,7 +162,7 @@ export function DepartScreen({
             onChange={(e) => update('projection90j', e.target.value)}
             placeholder="Dans 90 jours, je..."
             rows={3}
-            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white placeholder:text-white/30 focus:border-amethyst focus:outline-none focus:ring-1 focus:ring-amethyst transition-colors resize-none"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-white placeholder:text-white/30 focus:border-sky focus:outline-none focus:ring-1 focus:ring-sky transition-colors resize-none"
           />
         </div>
 
