@@ -23,6 +23,7 @@ import type {
 
 export default function App() {
   const [stage, setStage] = useState<Stage>('identity')
+  const [prenom, setPrenom] = useState('')
   const [photoScores, setPhotoScores] = useState<PhotoScores>(defaultPhotoScores)
   const [priorities, setPriorities] = useState<Priorities>([])
   const [startingPoints, setStartingPoints] = useState<Record<string, StartingPoint>>({})
@@ -39,6 +40,7 @@ export default function App() {
 
   const handleRestart = () => {
     setStage('identity')
+    setPrenom('')
     setPhotoScores(defaultPhotoScores())
     setPriorities([])
     setStartingPoints({})
@@ -50,9 +52,14 @@ export default function App() {
     <div className="min-h-screen gradient-onyx-sapphire">
       {stage !== 'welcome' && <ProgressHeader currentStage={stage} />}
       {stage === 'identity' && (
-        <IdentityScreen onDone={() => setStage('welcome')} />
+        <IdentityScreen
+          onDone={({ prenom: p }) => {
+            setPrenom(p)
+            setStage('welcome')
+          }}
+        />
       )}
-      {stage === 'welcome' && <WelcomeScreen onStart={() => setStage('photo')} />}
+      {stage === 'welcome' && <WelcomeScreen prenom={prenom} onStart={() => setStage('photo')} />}
       {stage === 'photo' && (
         <PhotoScreen
           scores={photoScores}

@@ -1,6 +1,8 @@
-import { useState } from 'react'
-import { ArrowRight, ShieldCheck, Loader2, AlertTriangle, User, Mail, Phone } from 'lucide-react'
-import { saveEvolUser } from '../lib/supabase'
+import { useRef, useState } from 'react'
+import { ArrowRight, ShieldCheck, User, Mail, Phone } from 'lucide-react'
+
+const SUBMISSION_URL =
+  'https://script.google.com/macros/s/AKfycbxMz70Fg31OQRdwIAPFl_W2PC4qXHsBCBFRwerAY63_cDpSDrwFG_tB--xaHQYphdsRPg/exec'
 
 interface IdentityScreenProps {
   onDone: (identity: { prenom: string; email: string; telephone: string }) => void
@@ -10,25 +12,27 @@ export function IdentityScreen({ onDone }: IdentityScreenProps) {
   const [prenom, setPrenom] = useState('')
   const [email, setEmail] = useState('')
   const [telephone, setTelephone] = useState('')
-  const [state, setState] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const submitAttemptedRef = useRef(false)
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
   const phoneValid = telephone.trim().length >= 8
   const valid = prenom.trim() !== '' && emailValid && phoneValid
 
-  const handleSubmit = async () => {
-    if (!valid || state === 'loading') return
-    setState('loading')
-    setError('')
-    try {
-      await saveEvolUser({ prenom: prenom.trim(), email: email.trim(), telephone: telephone.trim() })
-      setState('idle')
-      onDone({ prenom: prenom.trim(), email: email.trim(), telephone: telephone.trim() })
-    } catch {
-      setError("L'envoi a échoué. Vérifie ta connexion puis réessaie.")
-      setState('error')
-    }
+  const handleSubmit = () => {
+    if (!valid || submitAttemptedRef.current) return
+    submitAttemptedRef.current = true
+    setSubmitting(true)
+    onDone({ prenom: prenom.trim(), email: email.trim(), telephone: telephone.trim() })
+
+    // Envoi des coordonnées vers Google Apps Script (feuille de suivi de la team EVOL).
+    // Fire-and-forget : le parcours continue même si l'envoi échoue (réseau, CORS, etc.).
+    const body = new URLSearchParams({
+      prenom: prenom.trim(),
+      email: email.trim(),
+      telephone: telephone.trim(),
+    })
+    void fetch(SUBMISSION_URL, { method: 'POST', mode: 'no-cors', body }).catch(() => {})
   }
 
   return (
@@ -89,30 +93,20 @@ export function IdentityScreen({ onDone }: IdentityScreenProps) {
       <div className="flex items-start gap-3 bg-white/[0.03] border border-white/10 rounded-2xl p-4 mb-6">
         <ShieldCheck className="w-5 h-5 text-sapphire-light flex-shrink-0 mt-0.5" />
         <p className="text-white/60 text-sm leading-relaxed">
-          <span className="text-sapphire-light font-medium">Tes données sont protégées :</span> elles sont chiffrées,
-          jamais partagées ni revendues, et seul·e·s les membres habilités de la team support EVOL peuvent y accéder,
-          uniquement dans le cadre de ton accompagnement. Tu peux demander leur suppression à tout moment.
+          <span className="text-sapphire-light font-medium">Tes données sont protégées :</span> elles restent chez toi,
+          ne sont jamais partagées ni revendues, et seul·e·s les membres habilités de la team support EVOL peuvent y
+          accéder si tu leur en fais la demande, uniquement dans le cadre de ton accompagnement.
         </p>
       </div>
-
-      {state === 'error' && (
-        <div className="flex items-center gap-2 text-garnet-light bg-garnet/10 border border-garnet/30 rounded-xl p-3 mb-6">
-          <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-          <span className="text-sm">{error}</span>
-        </div>
-      )}
 
       <div className="text-center">
         <button
           onClick={handleSubmit}
-          disabled={!valid || state === 'loading'}
+          disabled={!valid || submitting}
           className={`inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold text-lg transition-all duration-300 ${
-            valid && state !== 'loading'
-              ? 'bg-sapphire hover:bg-sapphire-light glow-sapphire'
-              : 'bg-white/5 text-white/30 cursor-not-allowed'
+            valid ? 'bg-sapphire hover:bg-sapphire-light glow-sapphire' : 'bg-white/5 text-white/30 cursor-not-allowed'
           }`}
         >
-          {state === 'loading' && <Loader2 className="w-5 h-5 animate-spin" />}
           Commencer mon parcours
           <ArrowRight className="w-5 h-5" />
         </button>

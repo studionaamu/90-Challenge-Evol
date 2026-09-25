@@ -3,7 +3,6 @@ import { toPng } from 'html-to-image'
 import { Check, Download, RotateCcw, Loader2, AlertTriangle, ShieldCheck } from 'lucide-react'
 import { DOMAINS } from '../data/domains'
 import type { PhotoScores, StartingPoint, AnchorHabit, Pacte } from '../data/domains'
-import { supabase } from '../lib/supabase'
 import { EvolutionCard } from './EvolutionCard'
 
 interface SummaryScreenProps {
@@ -25,7 +24,6 @@ export function SummaryScreen({
   pacte,
   onRestart,
 }: SummaryScreenProps) {
-  const [saveState, setSaveState] = useState<SaveState>('idle')
   const [imageState, setImageState] = useState<SaveState>('idle')
   const [imageData, setImageData] = useState<string | null>(null)
   const [error, setError] = useState('')
@@ -48,29 +46,10 @@ export function SummaryScreen({
     }
   }, [])
 
-  const saveToDatabase = useCallback(async () => {
-    setSaveState('loading')
-    try {
-      const payload = {
-        photo_scores: photoScores,
-        priorities,
-        starting_points: priorities.map((id) => startingPoints[id]),
-        anchor_habits: priorities.map((id) => anchorHabits[id]),
-        pacte,
-      }
-      const { error: dbError } = await supabase.from('evol_checkpoints').insert(payload)
-      if (dbError) throw dbError
-      setSaveState('done')
-    } catch {
-      setError('Sauvegarde impossible. Vérifie ta connexion.')
-      setSaveState('error')
-    }
-  }, [photoScores, priorities, startingPoints, anchorHabits, pacte])
-
   const handleGenerate = useCallback(async () => {
     setError('')
-    await Promise.all([saveToDatabase(), generateImage()])
-  }, [saveToDatabase, generateImage])
+    await generateImage()
+  }, [generateImage])
 
   const downloadImage = useCallback(() => {
     if (!imageData) return
@@ -80,9 +59,9 @@ export function SummaryScreen({
     link.click()
   }, [imageData])
 
-  const allDone = saveState === 'done' && imageState === 'done'
-  const isLoading = saveState === 'loading' || imageState === 'loading'
-  const isError = saveState === 'error' || imageState === 'error'
+  const allDone = imageState === 'done'
+  const isLoading = imageState === 'loading'
+  const isError = imageState === 'error'
 
   const hiddenCard = (
     <div className="absolute -left-[9999px] top-0 opacity-0 pointer-events-none">
@@ -160,16 +139,14 @@ export function SummaryScreen({
           disabled={isLoading}
           className="flex items-center gap-2 mx-auto px-8 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 glow-emerald text-white font-semibold text-lg transition-all duration-300 disabled:opacity-50"
         >
-          {saveState === 'loading' && <Loader2 className="w-5 h-5 animate-spin" />}
           Générer ma Grande Carte d'Évolution
         </button>
 
         <div className="mt-8 flex items-start gap-3 bg-white/[0.03] border border-white/10 rounded-2xl p-4 text-left">
           <ShieldCheck className="w-5 h-5 text-sapphire-light flex-shrink-0 mt-0.5" />
           <p className="text-white/60 text-sm leading-relaxed">
-            <span className="text-sapphire-light font-medium">Tes réponses restent confidentielles :</span> elles sont
-            chiffrées et transmises uniquement à la team support EVOL, qui seule peut y accéder. Elles ne sont ni
-            partagées, ni utilisées à d'autres fins que ton accompagnement.
+            <span className="text-sapphire-light font-medium">Tes réponses restent confidentielles :</span> elles ne
+            quittent pas ton appareil, ne sont jamais partagées ni revendues, et restent sous ton entière contrôle.
           </p>
         </div>
       </div>
@@ -222,10 +199,7 @@ export function SummaryScreen({
       {isLoading && !allDone && (
         <div className="flex flex-col items-center gap-4 py-12">
           <Loader2 className="w-10 h-10 animate-spin text-sapphire-light" />
-          <p className="text-white/60">
-            {saveState === 'loading' && 'Sauvegarde en cours...'}
-            {imageState === 'loading' && 'Génération de l\'image...'}
-          </p>
+          <p className="text-white/60">Génération de l'image...</p>
         </div>
       )}
 
