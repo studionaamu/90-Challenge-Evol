@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .gradient-onyx-sapphire {
+    background: linear-gradient(180deg, #000000, #0a0a2e);
+  }
+  .gradient-sapphire-amethyst {
+    background: linear-gradient(135deg, #1525ff, #6d3ead);
+  }
+  .gradient-garnet-amethyst {
+    background: linear-gradient(135deg, #e92b1f, #6d3ead);
+  }
+  .glow-sapphire {
+    box-shadow: 0 0 30px rgba(21, 37, 255, 0.3);
+  }
+  .glow-garnet {
+    box-shadow: 0 0 30px rgba(233, 43, 31, 0.3);
+  }
+  .glow-emerald {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+  }
+}
+
+body {
+  @apply bg-onyx text-white antialiased;
+}
+
+input[type='range'] {
+  @apply h-2 rounded-full appearance-none cursor-pointer bg-white/10;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #1525ff, #6d3ead);
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(21, 37, 255, 0.5);
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #1525ff, #6d3ead);
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(21, 37, 255, 0.5);
+}
